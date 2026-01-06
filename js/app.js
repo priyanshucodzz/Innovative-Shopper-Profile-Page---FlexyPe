@@ -31,6 +31,150 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+// ===== PROFILE PAGE LOGIC =====
+function initProfilePage() {
+    // detect profile page
+    const insightsGrid = document.getElementById('insightsGrid');
+    if (!insightsGrid) return;
+
+    // Mock insights (could be fetched)
+    const mock = {
+        orders: 18,
+        aov: 1249.5,
+        topCategory: 'Office Supplies',
+        savings: 820,
+        tip: 'You save most on bulk paper orders. Consider a monthly subscription.'
+    };
+    const el = (id)=>document.getElementById(id);
+    if (el('insightOrders')) el('insightOrders').textContent = mock.orders;
+    if (el('insightAOV')) el('insightAOV').textContent = `₹${mock.aov.toFixed(2)}`;
+    if (el('insightFavCat')) el('insightFavCat').textContent = mock.topCategory;
+    if (el('insightSavings')) el('insightSavings').textContent = `₹${mock.savings.toFixed(0)}`;
+    if (el('insightTip')) el('insightTip').textContent = mock.tip;
+
+    // Preferences
+    const CATEGORY_POOL = ['Office Supplies','Electronics','Cleaning','Beverages','Furniture','Printing','Networking','Stationery'];
+    const prefCategoriesWrap = document.getElementById('prefCategories');
+    const prefBrands = document.getElementById('prefBrands');
+    const prefSpeed = document.getElementById('prefSpeed');
+    const prefEco = document.getElementById('prefEco');
+    const notifDeals = document.getElementById('notifDeals');
+    const notifOrders = document.getElementById('notifOrders');
+    const savePrefsBtn = document.getElementById('savePrefsBtn');
+    const clearProfileBtn = document.getElementById('clearProfileBtn');
+
+    // Build selectable tags
+    if (prefCategoriesWrap) {
+        prefCategoriesWrap.innerHTML = '';
+        CATEGORY_POOL.forEach(cat=>{
+            const span = document.createElement('span');
+            span.className = 'tag';
+            span.textContent = cat;
+            span.dataset.value = cat;
+            span.addEventListener('click', ()=>{
+                const active = prefCategoriesWrap.querySelectorAll('.tag.active').length;
+                if (!span.classList.contains('active') && active >= 5) {
+                    showToast('You can select up to 5 categories', 'warning');
+                    return;
+                }
+                span.classList.toggle('active');
+            });
+            prefCategoriesWrap.appendChild(span);
+        });
+    }
+
+    // Load saved profile
+    const profile = loadProfile();
+    if (profile) {
+        prefBrands && (prefBrands.value = profile.brands || '');
+        prefSpeed && (prefSpeed.value = profile.speed || 'standard');
+        prefEco && (prefEco.checked = !!profile.eco);
+        notifDeals && (notifDeals.checked = !!profile.notifDeals);
+        notifOrders && (notifOrders.checked = !!profile.notifOrders);
+        if (prefCategoriesWrap && Array.isArray(profile.categories)) {
+            profile.categories.forEach(v=>{
+                const chip = prefCategoriesWrap.querySelector(`.tag[data-value="${CSS.escape(v)}"]`);
+                if (chip) chip.classList.add('active');
+            });
+        }
+    }
+
+    savePrefsBtn && savePrefsBtn.addEventListener('click', ()=>{
+        const categories = Array.from(prefCategoriesWrap.querySelectorAll('.tag.active')).map(x=>x.dataset.value);
+        const data = {
+            categories,
+            brands: prefBrands?.value || '',
+            speed: prefSpeed?.value || 'standard',
+            eco: !!prefEco?.checked,
+            notifDeals: !!notifDeals?.checked,
+            notifOrders: !!notifOrders?.checked,
+        };
+        localStorage.setItem('bbh_profile', JSON.stringify(data));
+        showToast('Preferences saved', 'success');
+        renderRecommendations();
+    });
+
+    clearProfileBtn && clearProfileBtn.addEventListener('click', ()=>{
+        localStorage.removeItem('bbh_profile');
+        showToast('Profile data cleared', 'success');
+        location.reload();
+    });
+
+    // Rewards wallet (mock)
+    const tierBadge = el('tierBadge');
+    const walletCoins = el('walletCoins');
+    const tierProgress = el('tierProgress');
+    const tierHint = el('tierHint');
+    const wallet = loadWallet();
+    walletCoins && (walletCoins.textContent = wallet.coins.toString());
+    const {tier, nextAt, pct, hint} = computeTier(wallet.coins);
+    if (tierBadge) tierBadge.textContent = tier;
+    if (tierProgress) tierProgress.style.width = `${pct}%`;
+    if (tierHint) tierHint.textContent = hint;
+
+    // Recommendations based on categories/brands
+    function renderRecommendations() {
+        const list = document.getElementById('recList');
+        if (!list) return;
+        list.innerHTML = '';
+        const p = loadProfile() || {};
+        const cats = p.categories || ['Office Supplies','Electronics'];
+        const items = cats.slice(0,3).map((c, i)=>({
+            title: `${c} pick #${i+1}`,
+            subtitle: 'Tailored to your preferences',
+            badge: i===0 ? 'Deal' : (i===1 ? 'Trending' : 'Popular')
+        }));
+        items.forEach(it=>{
+            const div = document.createElement('div');
+            div.className = 'list-group-item';
+            div.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-semibold">${it.title}</div>
+                        <div class="small text-muted">${it.subtitle}</div>
+                    </div>
+                    <span class="badge bg-primary">${it.badge}</span>
+                </div>
+            `;
+            list.appendChild(div);
+        });
+    }
+    renderRecommendations();
+
+    // helpers
+    function loadProfile() {
+        try { return JSON.parse(localStorage.getItem('bbh_profile')||'{}'); } catch { return null; }
+    }
+    function loadWallet() {
+        try { return JSON.parse(localStorage.getItem('bbh_wallet')||'{"coins":320}'); } catch { return {coins:320}; }
+    }
+    function computeTier(coins) {
+        if (coins >= 2000) return {tier:'Gold', nextAt:null, pct:100, hint:'You are at the highest tier'};
+        if (coins >= 500) return {tier:'Silver', nextAt:2000, pct: Math.min(100, (coins-500)/(2000-500)*100), hint:`${2000-coins} coins to reach Gold`};
+        return {tier:'Bronze', nextAt:500, pct: Math.min(100, coins/500*100), hint:`${500-coins} coins to reach Silver`};
+    }
+}
+
 // ===== CART PAGE LOGIC =====
 function initCartPage() {
     const cartList = document.getElementById('cartItems');
@@ -201,6 +345,7 @@ function initCheckoutPage() {
     // Page-specific initializers
     initCartPage();
     initCheckoutPage();
+    initProfilePage();
 });
 
 // Initialize charts

@@ -26,7 +26,7 @@ body {
     background-color: #f5f7fb;
 }
 
-/* Sidebar */
+
 .sidebar {
     position: fixed;
     top: 0;
@@ -76,12 +76,11 @@ body {
     overflow-y: auto;
 }
 
-/* Main Content */
+
 main {
     padding-top: 1.5rem;
 }
 
-/* Cards */
 .card {
     border: none;
     border-radius: 0.5rem;
@@ -102,7 +101,7 @@ main {
     font-weight: 600;
 }
 
-/* Stats Cards */
+
 .stats-card {
     border-left: 4px solid;
 }
@@ -310,6 +309,73 @@ main {
 
 .hover-scale:hover {
     transform: scale(1.02);
+}
+
+/* Profile: Insights tiles */
+.insight-tile {
+    border: 1px solid var(--gray-200);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    background: #fff;
+}
+.insight-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+.insight-label {
+    font-size: 0.75rem;
+    color: var(--gray-600);
+}
+
+/* Profile: selectable tags */
+.tag {
+    display: inline-block;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    color: var(--gray-700);
+    cursor: pointer;
+    user-select: none;
+}
+.tag:hover { background: var(--gray-100); }
+.tag.active {
+    background: rgba(67, 97, 238, 0.1);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Profile page distinct look */
+.profile-hero {
+    background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+}
+.avatar-xxl {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+}
+.chip-light {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+}
+.profile-section .card-header {
+    background: #fff;
+}
+.profile-section {
+    border: 1px solid var(--gray-200);
+    border-radius: 0.5rem;
 }
 
 /* Custom Checkbox */
