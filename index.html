@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body data-bs-spy="scroll" data-bs-target="#sidebar" data-bs-offset="100" tabindex="0">
     <div class="container-fluid">
         <div class="row">
            
@@ -22,7 +22,7 @@
                     
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#overview">
+                            <a class="nav-link" href="#overview">
                                 <i class="bi bi-speedometer2 me-2"></i> Overview
                             </a>
                         </li>
@@ -60,7 +60,7 @@
                 </div>
             </nav>
 
-            <!-- Main Content -->
+            
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <!-- Top Bar -->
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -85,7 +85,8 @@
                     </div>
                 </div>
 
-                <!-- Stats Cards -->
+               
+                <section id="overview" class="pt-3">
                 <div class="row mb-4">
                     <div class="col-md-3 mb-3">
                         <div class="card bg-primary text-white h-100">
@@ -372,6 +373,82 @@
                         </div>
                     </div>
                 </div>
+            </section>
+            
+            <!-- Orders Section -->
+            <section id="orders" class="pt-5 pb-3">
+                <h4 class="mb-3">Orders</h4>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-muted mb-0">Track and manage all your purchase orders. Filter by status, vendor, and date.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Budget & Limits Section -->
+            <section id="budget" class="pt-5 pb-3">
+                <h4 class="mb-3">Budget & Limits</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h6 class="text-uppercase small mb-2">Monthly Budget</h6>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar bg-primary" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h6 class="text-uppercase small mb-2">Category Limits</h6>
+                                <p class="text-muted mb-0">Configure spend limits by team and category.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vendors Section -->
+            <section id="vendors" class="pt-5 pb-3">
+                <h4 class="mb-3">Vendors</h4>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-muted mb-0">Manage preferred suppliers, track performance, and review contracts.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Team & Approvals Section -->
+            <section id="team" class="pt-5 pb-3">
+                <h4 class="mb-3">Team & Approvals</h4>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-muted mb-0">Control who can place orders, set approval workflows, and role-based limits.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="pt-5 pb-3">
+                <h4 class="mb-3">Reports</h4>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-muted mb-0">Generate spending and vendor performance reports.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="pt-5 pb-5">
+                <h4 class="mb-3">Settings</h4>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-muted mb-0">Update organization preferences and notification settings.</p>
+                    </div>
+                </div>
+            </section>
             </main>
         </div>
     </div>

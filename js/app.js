@@ -1,4 +1,4 @@
-// Wait for the DOM to be fully loaded
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -12,21 +12,16 @@ document.addEventListener('DOMContentLoaded', function() {
         return new bootstrap.Popover(popoverTriggerEl);
     });
 
-    // Initialize charts
+    
     initCharts();
     
-    // Add active class to current nav link
-    const currentLocation = location.href;
-    const menuItems = document.querySelectorAll('.sidebar .nav-link');
-    const menuLength = menuItems.length;
-    
-    for (let i = 0; i < menuLength; i++) {
-        if (menuItems[i].href === currentLocation) {
-            menuItems[i].classList.add('active');
-        }
-    }
+    // Initialize Bootstrap ScrollSpy for sidebar highlighting
+    const scrollSpy = bootstrap.ScrollSpy.getOrCreateInstance(document.body, {
+        target: '#sidebar',
+        offset: 100
+    });
 
-    // Toggle sidebar on mobile
+    
     const sidebar = document.getElementById('sidebar');
     const sidebarToggler = document.getElementById('sidebarToggler');
     
@@ -46,23 +41,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle window resize
+    
     window.addEventListener('resize', function() {
         if (window.innerWidth >= 768) {
             sidebar.classList.remove('show');
         }
+        // Refresh ScrollSpy positions on resize
+        if (scrollSpy && typeof scrollSpy.refresh === 'function') {
+            scrollSpy.refresh();
+        }
     });
 
-    // Initialize form validation
     initFormValidation();
 
-    // Initialize datepickers
+  
     initDatepickers();
 
-    // Initialize file upload preview
+    
     initFileUpload();
 
-    // Initialize notifications
     initNotifications();
 });
 

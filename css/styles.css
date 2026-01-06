@@ -19,6 +19,8 @@
     --gray-900: #212529;
 }
 
+html { scroll-behavior: smooth; }
+
 body {
     font-size: 0.875rem;
     background-color: #f5f7fb;
