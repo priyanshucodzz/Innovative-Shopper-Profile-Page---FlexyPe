@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout • Business Buying Hub</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1 class="h4 mb-0">Checkout</h1>
+      <a href="cart.html" class="text-decoration-none"><i class="bi bi-arrow-left"></i> Back to Cart</a>
+    </div>
+
+    <ul class="nav nav-pills mb-4" id="checkoutSteps" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="step-shipping-tab" data-bs-toggle="pill" data-bs-target="#step-shipping" type="button" role="tab">1. Shipping</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="step-payment-tab" data-bs-toggle="pill" data-bs-target="#step-payment" type="button" role="tab">2. Payment</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="step-review-tab" data-bs-toggle="pill" data-bs-target="#step-review" type="button" role="tab">3. Review</button>
+      </li>
+    </ul>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="tab-content" id="checkoutContent">
+          <!-- Shipping -->
+          <div class="tab-pane fade show active" id="step-shipping" role="tabpanel">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Shipping Address</h5>
+                <form class="row g-3 needs-validation" novalidate>
+                  <div class="col-md-6">
+                    <label class="form-label">Full Name</label>
+                    <input class="form-control" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    <input class="form-control" required>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Address</label>
+                    <input class="form-control" required>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Pincode</label>
+                    <input class="form-control" required>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">City</label>
+                    <input class="form-control" required>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">State</label>
+                    <input class="form-control" required>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Delivery Options</label>
+                    <div class="list-group">
+                      <label class="list-group-item d-flex justify-content-between align-items-center">
+                        <div><input class="form-check-input me-2" type="radio" name="delivery" checked> Standard (3-5 days)</div>
+                        <span class="text-muted">Free</span>
+                      </label>
+                      <label class="list-group-item d-flex justify-content-between align-items-center">
+                        <div><input class="form-check-input me-2" type="radio" name="delivery"> Express (1-2 days)</div>
+                        <span>₹149</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-12 d-flex justify-content-end">
+                    <button class="btn btn-primary" type="button" data-next="#step-payment-tab">Continue to Payment</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment -->
+          <div class="tab-pane fade" id="step-payment" role="tabpanel">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Payment Method</h5>
+                <div class="list-group mb-3">
+                  <label class="list-group-item">
+                    <input class="form-check-input me-2" type="radio" name="pay" checked>
+                    Credit/Debit Card
+                  </label>
+                  <label class="list-group-item">
+                    <input class="form-check-input me-2" type="radio" name="pay"> UPI
+                  </label>
+                  <label class="list-group-item">
+                    <input class="form-check-input me-2" type="radio" name="pay"> NetBanking
+                  </label>
+                  <label class="list-group-item">
+                    <input class="form-check-input me-2" type="radio" name="pay"> Cash on Delivery
+                  </label>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Cardholder Name</label>
+                    <input class="form-control" placeholder="Name on card">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Card Number</label>
+                    <input class="form-control" placeholder="xxxx xxxx xxxx xxxx">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Expiry</label>
+                    <input class="form-control" placeholder="MM/YY">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">CVV</label>
+                    <input class="form-control" placeholder="***">
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                  <button class="btn btn-outline-secondary" type="button" data-prev="#step-shipping-tab">Back</button>
+                  <button class="btn btn-primary" type="button" data-next="#step-review-tab">Review Order</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review -->
+          <div class="tab-pane fade" id="step-review" role="tabpanel">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Review & Place Order</h5>
+                <ul class="list-group list-group-flush mb-3">
+                  <li class="list-group-item d-flex justify-content-between"><span>Items</span><span id="revSubtotal">₹0.00</span></li>
+                  <li class="list-group-item d-flex justify-content-between"><span>Discount</span><span id="revDiscount">- ₹0.00</span></li>
+                  <li class="list-group-item d-flex justify-content-between"><span>Tax</span><span id="revTax">₹0.00</span></li>
+                  <li class="list-group-item d-flex justify-content-between fw-semibold"><span>Total</span><span id="revTotal">₹0.00</span></li>
+                </ul>
+                <div class="d-flex justify-content-between">
+                  <button class="btn btn-outline-secondary" type="button" data-prev="#step-payment-tab">Back</button>
+                  <a class="btn btn-success" href="confirmation.html">Place Order</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card order-summary-sticky">
+          <div class="card-header"><strong>Order Summary</strong></div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Subtotal</span>
+              <span id="coSubtotal">₹0.00</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Discount</span>
+              <span id="coDiscount">- ₹0.00</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Tax</span>
+              <span id="coTax">₹0.00</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between fw-semibold">
+              <span>Total</span>
+              <span id="coTotal">₹0.00</span>
+            </div>
+            <div class="small text-muted mt-2">You can edit details in the steps on the left.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-lg-none mobile-checkout-bar">
+    <div class="container d-flex justify-content-between align-items-center py-2">
+      <div class="fw-semibold" id="mobileCoTotal">₹0.00</div>
+      <a href="#step-payment" class="btn btn-primary" data-next="#step-payment-tab">Next</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

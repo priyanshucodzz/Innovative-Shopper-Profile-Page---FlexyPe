@@ -269,6 +269,28 @@ main {
     animation: fadeIn 0.3s ease-out forwards;
 }
 
+/* Checkout: Sticky Order Summary */
+.order-summary-sticky {
+    position: sticky;
+    top: 90px;
+}
+
+/* Mobile bottom checkout bar */
+.mobile-checkout-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid var(--gray-200);
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+    z-index: 1030;
+}
+
+@media (min-width: 992px) {
+    .mobile-checkout-bar { display: none; }
+}
+
 /* Custom Utilities */
 .cursor-pointer {
     cursor: pointer;

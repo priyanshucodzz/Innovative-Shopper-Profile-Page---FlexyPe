@@ -31,6 +31,142 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+// ===== CART PAGE LOGIC =====
+function initCartPage() {
+    const cartList = document.getElementById('cartItems');
+    if (!cartList) return; // not on cart page
+
+    const couponApplyBtn = document.querySelector('[data-coupon-apply]');
+    const couponInput = document.getElementById('couponCode');
+
+    const elSubtotal = document.getElementById('summarySubtotal');
+    const elDiscount = document.getElementById('summaryDiscount');
+    const elTax = document.getElementById('summaryTax');
+    const elTotal = document.getElementById('summaryTotal');
+    const elMobileTotal = document.getElementById('mobileTotal');
+    const freeShip = document.getElementById('freeShippingMsg');
+
+    let appliedDiscountPct = 0;
+
+    function recalc() {
+        let subtotal = 0;
+        cartList.querySelectorAll('[data-line-total]').forEach(line => {
+            const price = parseFloat(line.getAttribute('data-price')) || 0;
+            const qtyInput = line.closest('.row').querySelector('[data-qty-input]');
+            const qty = Math.max(1, parseInt(qtyInput.value || '1', 10));
+            const lineTotal = price * qty;
+            line.textContent = formatINR(lineTotal);
+            subtotal += lineTotal;
+        });
+        const discount = subtotal * appliedDiscountPct;
+        const taxable = Math.max(0, subtotal - discount);
+        const tax = taxable * 0.18; // 18% GST example
+        const total = taxable + tax;
+
+        if (elSubtotal) elSubtotal.textContent = formatINR(subtotal);
+        if (elDiscount) elDiscount.textContent = `- ${formatINR(discount)}`;
+        if (elTax) elTax.textContent = formatINR(tax);
+        if (elTotal) elTotal.textContent = formatINR(total);
+        if (elMobileTotal) elMobileTotal.textContent = formatINR(total);
+        if (freeShip) freeShip.style.display = total >= 999 ? 'block' : 'none';
+
+        // persist to session for checkout
+        sessionStorage.setItem('bbh_totals', JSON.stringify({subtotal, discount, tax, total}));
+    }
+
+    function formatINR(n) { return `₹${(n||0).toFixed(2)}`; }
+
+    cartList.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-qty]');
+        if (btn) {
+            const dir = btn.getAttribute('data-qty');
+            const input = btn.parentElement.querySelector('[data-qty-input]');
+            let val = Math.max(1, parseInt(input.value || '1', 10));
+            if (dir === 'inc') val += 1; else if (dir === 'dec') val = Math.max(1, val - 1);
+            input.value = val;
+            recalc();
+        }
+        const remove = e.target.closest('[data-remove]');
+        if (remove) {
+            const item = remove.closest('.list-group-item');
+            item.parentElement.removeChild(item);
+            recalc();
+        }
+    });
+
+    cartList.addEventListener('change', (e) => {
+        if (e.target.matches('[data-qty-input]')) recalc();
+    });
+
+    if (couponApplyBtn) {
+        couponApplyBtn.addEventListener('click', () => {
+            const code = (couponInput?.value || '').trim().toUpperCase();
+            if (!code) { showToast('Enter a coupon code', 'warning'); return; }
+            if (code === 'SAVE10') {
+                appliedDiscountPct = 0.10;
+                showToast('Coupon applied: 10% off', 'success');
+            } else {
+                appliedDiscountPct = 0;
+                showToast('Invalid coupon', 'danger');
+            }
+            recalc();
+        });
+    }
+
+    recalc();
+}
+
+// ===== CHECKOUT PAGE LOGIC =====
+function initCheckoutPage() {
+    const steps = document.getElementById('checkoutSteps');
+    if (!steps) return; // not on checkout page
+
+    const elCoSubtotal = document.getElementById('coSubtotal');
+    const elCoDiscount = document.getElementById('coDiscount');
+    const elCoTax = document.getElementById('coTax');
+    const elCoTotal = document.getElementById('coTotal');
+    const elMobileTotal = document.getElementById('mobileCoTotal');
+    const revSubtotal = document.getElementById('revSubtotal');
+    const revDiscount = document.getElementById('revDiscount');
+    const revTax = document.getElementById('revTax');
+    const revTotal = document.getElementById('revTotal');
+
+    function applyTotals() {
+        let totals = {subtotal:0, discount:0, tax:0, total:0};
+        try { totals = JSON.parse(sessionStorage.getItem('bbh_totals') || '{}'); } catch {}
+        const f = (n)=>`₹${(n||0).toFixed(2)}`;
+        if (elCoSubtotal) elCoSubtotal.textContent = f(totals.subtotal);
+        if (elCoDiscount) elCoDiscount.textContent = `- ${f(totals.discount)}`;
+        if (elCoTax) elCoTax.textContent = f(totals.tax);
+        if (elCoTotal) elCoTotal.textContent = f(totals.total);
+        if (elMobileTotal) elMobileTotal.textContent = f(totals.total);
+        if (revSubtotal) revSubtotal.textContent = f(totals.subtotal);
+        if (revDiscount) revDiscount.textContent = `- ${f(totals.discount)}`;
+        if (revTax) revTax.textContent = f(totals.tax);
+        if (revTotal) revTotal.textContent = f(totals.total);
+    }
+
+    // step navigation via data-next / data-prev
+    document.body.addEventListener('click', (e) => {
+        const nextBtn = e.target.closest('[data-next]');
+        const prevBtn = e.target.closest('[data-prev]');
+        if (nextBtn) {
+            const target = nextBtn.getAttribute('data-next');
+            const tab = document.querySelector(target);
+            if (tab) new bootstrap.Tab(tab).show();
+            e.preventDefault();
+        }
+        if (prevBtn) {
+            const target = prevBtn.getAttribute('data-prev');
+            const tab = document.querySelector(target);
+            if (tab) new bootstrap.Tab(tab).show();
+            e.preventDefault();
+        }
+    });
+
+    applyTotals();
+}
+
     // Close sidebar when clicking outside on mobile
     document.addEventListener('click', function(event) {
         const isClickInside = sidebar.contains(event.target) || 
@@ -61,6 +197,10 @@ document.addEventListener('DOMContentLoaded', function() {
     initFileUpload();
 
     initNotifications();
+
+    // Page-specific initializers
+    initCartPage();
+    initCheckoutPage();
 });
 
 // Initialize charts
